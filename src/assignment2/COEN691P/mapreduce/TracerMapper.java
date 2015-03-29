@@ -5,16 +5,6 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-/*
- * Sample Data <year> <temperature>
- * 1990;32
- * 1990;31
- * 1990;30
- * 1991;28
- * 1991;35
- * 1991;30
- */
-
 public class TracerMapper extends
         Mapper<LongWritable, Text, Text, IntWritable>
 {
