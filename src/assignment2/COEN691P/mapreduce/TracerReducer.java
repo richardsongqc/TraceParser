@@ -12,26 +12,28 @@ public class TracerReducer
 {
     ArrayList<Double> listTraces = new ArrayList<Double>();
 
-    public void reduce(
-            Text key, 
-            Iterator<DoubleWritable> values, 
-            OutputCollector<Text, DoubleWritable> output, 
-            Reporter reporter) 
+    @Override
+    public void reduce(Text arg0, Iterator<DoubleWritable> arg1,
+            OutputCollector<Text, DoubleWritable> arg2, Reporter arg3)
             throws IOException
     {
-        double sum = 0;
-        while (values.hasNext()) 
+        Double sum = (double) 0;
+        while (arg1.hasNext()) 
         {
-            sum += values.next().get();
-            listTraces.add(values.next().get());
+            Double item = arg1.next().get();
+            sum += item;
+            listTraces.add(item);
         }
         
         Collections.sort(listTraces);
         int size = listTraces.size();
-
-        output.collect(new Text("min"), new DoubleWritable(listTraces.get(0)));
-        output.collect(new Text("max"), new DoubleWritable(listTraces.get(size-1)));
-        output.collect(new Text("avg"), new DoubleWritable(sum/size));
+        
+        System.out.println("size of listTrace = " + size);
+        
+        arg2.collect(new Text("min"), new DoubleWritable(listTraces.get(0)));
+        arg2.collect(new Text("max"), new DoubleWritable(listTraces.get(size-1)));
+        arg2.collect(new Text("avg"), new DoubleWritable(sum/size));
+        
     }
 
 }

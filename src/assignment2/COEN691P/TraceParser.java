@@ -27,7 +27,7 @@ public class TraceParser
             System.err.println("\t<output path>:");
             return;
         }
-
+        
         //Job job = new Job();
         //job.setJarByClass(TraceParser.class);
         //job.setJobName("Trace Parser");
@@ -56,8 +56,8 @@ public class TraceParser
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);
 
-        FileInputFormat.setInputPaths(conf, new Path(args[1]));
-        FileOutputFormat.setOutputPath(conf, new Path(args[2]));
+        FileInputFormat.setInputPaths(conf, new Path(args[0]));
+        FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
         JobClient.runJob(conf); // blocking call
         

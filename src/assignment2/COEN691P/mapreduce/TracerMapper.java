@@ -19,6 +19,9 @@ public class TracerMapper
         //Long TaskID = Long.parseLong(line[2]);
         //int JobType = Integer.parseInt(line[3]);
         //Double NrmlTaskCores = Double.parseDouble(line[4]);
+        if( line[5].equals("NrmlTaskMem") == true )
+            return;
+        
         Double NrmlTaskMem = Double.parseDouble(line[5]);
         output.collect( new Text("value"), new DoubleWritable(NrmlTaskMem));
     }
