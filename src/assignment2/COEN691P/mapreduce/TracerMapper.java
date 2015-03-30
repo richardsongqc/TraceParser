@@ -1,26 +1,41 @@
 package assignment2.COEN691P.mapreduce;
 
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
 
-public class TracerMapper extends
-        Mapper<LongWritable, Text, Text, IntWritable>
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.*;
+
+public class TracerMapper 
+    extends MapReduceBase 
+    implements Mapper<LongWritable, Text, Text, DoubleWritable>
 {
-
-    private Text                     yearText     = new Text();
-    private final static IntWritable tempWritable = new IntWritable(0);
-
-    protected void map(LongWritable key, Text value, Context context)
-            throws java.io.IOException, InterruptedException
+    
+    public void map(LongWritable key, Text value, OutputCollector<Text, DoubleWritable> output, Reporter reporter)
+            throws java.io.IOException
     {
-        String[] line = value.toString().split(";");
-        String year = line[0];
-        yearText.set(year);
-        int temp = Integer.parseInt(line[1]);
-        tempWritable.set(temp);
-        context.write(yearText, tempWritable);
+        String[] line = value.toString().split(" ");
+        
+        //Long Time = Long.parseLong(line[0]);
+        //Long JobID = Long.parseLong(line[1]);
+        //Long TaskID = Long.parseLong(line[2]);
+        //int JobType = Integer.parseInt(line[3]);
+        //Double NrmlTaskCores = Double.parseDouble(line[4]);
+        Double NrmlTaskMem = Double.parseDouble(line[5]);
+        output.collect( new Text("value"), new DoubleWritable(NrmlTaskMem));
     }
+    
+    //        protected void map(LongWritable key, Text value, OutputCollector<Text, DoubleWritable> output)
+    //        throws java.io.IOException, InterruptedException
+    //{
+    //    String[] line = value.toString().split(" ");
+    //    
+    //    Long Time = Long.parseLong(line[0]);
+    //    Long JobID = Long.parseLong(line[1]);
+    //    Long TaskID = Long.parseLong(line[2]);
+    //    int JobType = Integer.parseInt(line[3]);
+    //    Double NrmlTaskCores = Double.parseDouble(line[4]);
+    //    Double NrmlTaskMem = Double.parseDouble(line[5]);
+    //    
+    //    context.write(JobID, tempWritable);
+    //}
 
 }

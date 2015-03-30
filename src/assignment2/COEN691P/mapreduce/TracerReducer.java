@@ -1,39 +1,37 @@
 package assignment2.COEN691P.mapreduce;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Reducer;
+import java.io.IOException;
+import java.util.*;
 
-public class TracerReducer extends
-        Reducer<Text, IntWritable, Text, IntWritable>
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.*;
+
+public class TracerReducer 
+    extends MapReduceBase 
+    implements Reducer<Text, DoubleWritable, Text, DoubleWritable>
 {
-    ArrayList<Integer> temperatureList = new ArrayList<Integer>();
+    ArrayList<Double> listTraces = new ArrayList<Double>();
 
-    protected void reduce(Text key, Iterable<IntWritable> values,
-            Context context) throws java.io.IOException, InterruptedException
+    public void reduce(
+            Text key, 
+            Iterator<DoubleWritable> values, 
+            OutputCollector<Text, DoubleWritable> output, 
+            Reporter reporter) 
+            throws IOException
     {
-        int median = 0;
-        for (IntWritable value : values)
+        double sum = 0;
+        while (values.hasNext()) 
         {
-            temperatureList.add(value.get());
+            sum += values.next().get();
+            listTraces.add(values.next().get());
         }
-        Collections.sort(temperatureList);
-        int size = temperatureList.size();
+        
+        Collections.sort(listTraces);
+        int size = listTraces.size();
 
-        if (size % 2 == 0)
-        {
-            int half = size / 2;
-
-            median = temperatureList.get(half);
-        }
-        else
-        {
-            int half = (size + 1) / 2;
-            median = temperatureList.get(half - 1);
-        }
-        context.write(key, new IntWritable(median));
+        output.collect(new Text("min"), new DoubleWritable(listTraces.get(0)));
+        output.collect(new Text("max"), new DoubleWritable(listTraces.get(size-1)));
+        output.collect(new Text("avg"), new DoubleWritable(sum/size));
     }
 
 }
